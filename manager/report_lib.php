@@ -34,5 +34,19 @@
 
 function get_info_course($id_curso)
 {
-    return "HOLA";
+    global $DB;
+
+    $query = "SELECT id, name FROM {quiz} WHERE course = $id_curso";
+    $response_query = $DB->get_records_sql($query);
+    $response = array();
+    //Processing data to allow template to process
+    foreach ($response_query as $item) {
+        $new_item = array(
+            "id" => $item->id,
+            "name" => $item->name
+        );
+        array_push($response, $new_item);
+    }
+
+    return $response;
 }

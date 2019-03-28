@@ -29,18 +29,30 @@ require_once($CFG->libdir.'/adminlib.php');
 $courseid = required_param('id', PARAM_INT);
 $url = new moodle_url('/local/customgrader/index.php', array('id' => $courseid));
 
+/// Make sure they can even access this course
+if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+    print_error('invalidcourseid');
+}
+
+require_login($course);
+
 // $PAGE->set_url($url);
 $PAGE->set_title("Reporte Univalle");
 
 // $PAGE->set_pagelayout('admin');
+//$extraurlparams no esta siendo recibido en el setting. Investigar causa
 $extraurlparams = array('id' => $courseid);
-
 admin_externalpage_setup('customreportuv','', $extraurlparams, "$CFG->wwwroot/local/customreportuv/index.php");
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading("REPORTE");
+echo $OUTPUT->heading("REPORTE EXPORTABLE");
 
-// echo $OUTPUT->container(get_string('err_nousers', 'completion'), 'errorbox errorboxcontent');
+$data = new stdClass();
+$data->course = $course->fullname;
+$data->items = get_info_course($courseid);
+
+echo $OUTPUT->render_from_template('local_customreportuv/index', $data);
+
 echo $OUTPUT->footer();
+die;
 
-// echo get_info_course($courseid);
