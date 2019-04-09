@@ -23,7 +23,7 @@
  */
 
 require_once '../../config.php';
-require_once 'manager/report_lib.php';
+require_once 'managers/report_lib.php';
 require_once($CFG->libdir.'/adminlib.php');
 
 $courseid = required_param('id', PARAM_INT);
@@ -43,9 +43,13 @@ $PAGE->set_title("Reporte Univalle");
 //$extraurlparams no esta siendo recibido en el setting. Investigar causa
 $extraurlparams = array('id' => $courseid);
 admin_externalpage_setup('customreportuv','', $extraurlparams, "$CFG->wwwroot/local/customreportuv/index.php");
-echo $OUTPUT->header();
+$PAGE->requires->css('/local/customgrader/style/sweetalert.css', true);
 
+echo $OUTPUT->header();
 echo $OUTPUT->heading("REPORTE EXPORTABLE");
+
+$PAGE->requires->js_call_amd('local_customreportuv/index', 'init');
+
 
 $data = new stdClass();
 $data->course = $course->fullname;

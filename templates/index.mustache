@@ -1,5 +1,29 @@
 <h1>{{ course }}</h1>
 
-{{#items}}
-    {{id}} {{name}} <br>
-{{/items}}
+<div id="btn">
+    <button class="btn btn-primary" id="download">
+        DESCARGAR
+    </button>
+</div>
+
+<div style="float: right;">
+    <a href="#btn" id="sel"> 
+        Seleccionar todos/ninguno
+    </a>
+</div>
+<form action="POST" class="mform" style="margin-top: 2em">
+    {{#items}}
+    <div class="form-group row  fitem  checkboxgroup1">
+        <div class="col-md-9 checkbox">
+            <div class="form-check">
+                <label>
+                    <input type="hidden" name="itemids[{{id}}]" value="0">
+                    <input type="checkbox" name="itemids[{{id}}]" class="form-check-input checkboxgroup1" value="{{id}}"
+                        id="id_itemids_{{id}}" checked>
+                    {{name}}
+                </label>
+            </div>
+        </div>
+    </div>
+    {{/items}}
+</form>
