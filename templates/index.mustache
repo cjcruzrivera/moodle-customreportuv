@@ -1,4 +1,4 @@
-<h1>{{ course }}</h1>
+<h1 id="course" >{{ course }}</h1>
 
 <div id="btn">
     <button class="btn btn-primary" id="download">
@@ -27,3 +27,11 @@
     </div>
     {{/items}}
 </form>
+
+{{#js}}
+require.config({
+	paths: {
+		xlsx: "local/customreportuv/build/xlsx.full.min"
+	}
+});
+{{/js}}

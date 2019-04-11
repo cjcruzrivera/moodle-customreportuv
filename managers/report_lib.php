@@ -35,7 +35,7 @@ function get_info_course($id_curso)
 {
     global $DB;
 
-    $query = "SELECT id, name FROM {quiz} WHERE course = $id_curso";
+    $query = "SELECT id, name FROM {quiz} WHERE course = $id_curso ORDER BY name";
     $response_query = $DB->get_records_sql($query);
     $response = array();
     //Processing data to allow template to process
@@ -58,20 +58,22 @@ function get_info_course($id_curso)
  */
 function get_data_report($data, $course)
 {
+    global $DB;
+    $return_data = [];
     foreach ($data as $element) {
-        $consulta = "SELECT DISTINCT usuario.firstname as 'Nombre',
-                    usuario.lastname as 'Apellidos',
-                    usuario.username as 'Código',
-                    usuario.email as 'Correo',
-                    usuario.institution as 'Institución',
-                    usuario.department as 'Facultad',
-                    grupo.name as 'Grupo',
-                    intento.state as 'Estado',
-                    to_timestamp(intento.timestart) as 'Comenzado el',
-                    to_timestamp(intento.timefinish) as 'Finalizando el',
-                    justify_interval(to_timestamp(intento.timefinish)-to_timestamp(intento.timestart)) as 'Duracion',
-                    grades.grade as 'Calificacion',
-                    mod.grade as 'Nota Maxima'
+        $consulta = "SELECT DISTINCT usuario.firstname as \"Nombre\",
+                    usuario.lastname as \"Apellidos\",
+                    usuario.username as \"Código\",
+                    usuario.email as \"Correo\",
+                    usuario.institution as \"Institución\",
+                    usuario.department as \"Facultad\",
+                    grupo.name as \"Grupo\",
+                    intento.state as \"Estado\",
+                    to_timestamp(intento.timestart) as \"Comenzado el\",
+                    to_timestamp(intento.timefinish) as \"Finalizando el\",
+                    justify_interval(to_timestamp(intento.timefinish)-to_timestamp(intento.timestart)) as \"Duracion\",
+                    grades.grade as \"Calificacion\",
+                    mod.grade as \"Nota Maxima\"
 
                     FROM {quiz} mod INNER JOIN {quiz_attempts} intento ON intento.quiz = mod.id
                                     INNER JOIN {quiz_grades} grades ON grades.quiz = mod.id
@@ -79,6 +81,19 @@ function get_data_report($data, $course)
                                     LEFT JOIN {groups_members} miembros ON miembros.userid = usuario.id
                                     LEFT JOIN {groups} grupo ON grupo.id = miembros.groupid
                     WHERE mod.id = $element AND grupo.courseid = $course AND grades.userid = intento.userid ";
+
+        $response = $DB->get_records_sql($consulta);
+        array_push($return_data, processData($response));
     }
-    return array("consulta");
+
+    return $return_data;
+}
+
+function processData($data)
+{
+    $resp = [];
+    foreach ($data as $element) {
+        array_push($resp, $element);
+    }
+    return $resp;
 }

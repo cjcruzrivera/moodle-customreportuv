@@ -47,7 +47,7 @@ $PAGE->requires->css('/local/customgrader/style/sweetalert.css', true);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading("REPORTE EXPORTABLE");
-
+// $PAGE->requires->js('/local/customreportuv/js/xlsx.js');
 $PAGE->requires->js_call_amd('local_customreportuv/index', 'init');
 
 
